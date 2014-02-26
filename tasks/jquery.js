@@ -60,11 +60,16 @@ module.exports = function( grunt ) {
                 result = String( result );
 
                 if ( !error && !gh404.test( result ) ) {
-                    if ( typeof outputDir === "string" && outputDir ) {
-                        path += outputDir + "/";
+                  
+                    if(v.dest) {
+                      path = v.dest;
+                    } else {
+                      if ( typeof outputDir === "string" && outputDir ) {
+                          path += outputDir + "/";
+                      }
+                      path += options.prefix + version + ".js";
+                      
                     }
-                    path += options.prefix + version + ".js";
-
                     grunt.file.write( path, String( result ) );
                     grunt.log.ok( "Created " + path );
                 } else if ( error ) {
@@ -82,7 +87,7 @@ module.exports = function( grunt ) {
             args = spawnArgs.slice();
             args.push( "--version", v );
 
-            excludes = versions[ v ];
+            excludes = versions[ v ].excludes;
             if ( Array.isArray( excludes ) ) {
                 excludes = excludes.join( "," );
             } else if ( typeof excludes !== "string" ) {
